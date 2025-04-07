@@ -6,9 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "test": "jest",
-    "reg-publish": "reg-suit run"
+    "lint": "next lint"
   },
   "dependencies": {
     "bootstrap": "^5.3.5",
@@ -18,10 +16,7 @@
     "pngjs": "^7.0.0",
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.9",
-    "react-dom": "^19.0.0",
-    "reg-keygen-git-hash-plugin": "^0.14.3",
-    "reg-notify-github-plugin": "^0.14.4",
-    "reg-suit": "^0.14.4"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
