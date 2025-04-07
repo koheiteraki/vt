@@ -1,0 +1,19 @@
+
+{
+    "core": {
+      "actualDir": "./__screenshots__/actual",
+      "thresholdRate": 0.01,
+      "ximgdiff": {
+        "invocationType": "client"
+      }
+    },
+    "plugins": {
+      "reg-keygen-git-hash-plugin": {
+        "actualDir": "./__screenshots__/actual"
+      },
+      "reg-notify-github-plugin": {
+        "clientId": "your-github-client-id",
+        "clientSecret": "your-github-client-secret"
+      }
+    }
+  }
