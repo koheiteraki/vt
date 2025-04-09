@@ -27,6 +27,7 @@ export default function Home() {
   return (
 
     <div>
+      
       <div className="relative px-6 lg:px-8 dark:bg-gray-800">
           <div className="mx-auto max-w-3xl pt-20 pb-32 sm:pt-48 sm:pb-40">
               <div>

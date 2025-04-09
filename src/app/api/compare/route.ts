@@ -78,10 +78,37 @@ export async function GET(request) {
 
     try {
       // ページの読み込み完了後にスクリーンショットを取得 (フルスクリーン)
-      await page.goto(productionUrl, { waitUntil: 'load', timeout: 30000 }); // タイムアウトを設定
-      const productionScreenshot = await page.screenshot({ fullPage: true });
-      await page.goto(developmentUrl, { waitUntil: 'load', timeout: 30000 }); // タイムアウトを設定
-      const developmentScreenshot = await page.screenshot({ fullPage: true });
+
+      async function takeScreenshotWithScroll(url) {
+        await page.goto(url, { waitUntil: 'load', timeout: 30000 }); // タイムアウトを設定
+
+        // ページ全体をスクロール
+        await page.evaluate(async () => {
+          await new Promise((resolve) => {
+            let totalHeight = 0;
+            const distance = 500; // スクロール量
+            const timer = setInterval(() => {
+              const scrollHeight = document.body.scrollHeight;
+              window.scrollBy(0, distance);
+              totalHeight += distance;
+
+              if (totalHeight >= scrollHeight - window.innerHeight) {
+                clearInterval(timer);
+                resolve();
+              }
+            }, 100); // スクロール間隔
+          });
+        });
+
+        // スクロール後のコンテンツが読み込まれるのを待つ
+        await page.waitForTimeout(500); // 必要に応じて調整
+
+        return await page.screenshot({ fullPage: true });
+      }
+
+
+      const productionScreenshot = await takeScreenshotWithScroll(productionUrl);
+      const developmentScreenshot = await takeScreenshotWithScroll(developmentUrl);
 
       // 画像比較処理
       const img1 = PNG.sync.read(productionScreenshot);
@@ -95,7 +122,7 @@ export async function GET(request) {
         diff.data,
         width,
         height,
-        { threshold: 0.1 } // 差分の閾値 (調整可能)
+        { threshold: 0.2 } // 差分の閾値 (調整可能)
       );
 
       // 差分画像をBase64エンコード
