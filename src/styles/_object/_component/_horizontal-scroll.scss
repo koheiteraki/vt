@@ -1,0 +1,62 @@
+
+@use "../../_foundation" as f;
+
+.c-hs {
+	overflow: hidden;
+	position: relative;
+	.l-hero-wrapper {
+		width: 400%;
+		height: 100vh;
+		display: flex;
+		flex-wrap: nowrap;
+		will-change: auto;
+	}
+	.l-hero-panel {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
+		background-size: cover;
+		background-position: center center;
+		background-repeat: no-repeat;
+		&-01 {
+			background-image: url('https://source.unsplash.com/KU1DYLV3tQE');
+		}
+		&-02 {
+			background-image: url('https://source.unsplash.com/RfH5sOHTOek');
+		}
+		&-03 {
+			background-image: url('https://source.unsplash.com/uOcQUMXaUz8');
+		}
+		&-04 {
+			background-image: url('https://source.unsplash.com/aYLTPUkGZ-8');
+		}
+		&::after {
+			content: '';
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 2;
+			background-color: rgba(#000, .25);
+		}
+	}
+	.l-hero-panel__contents {
+		flex: 0 0 100%;
+		text-align: center;
+		font-weight: 700;
+		color: #fff;
+		font-size: 24px;
+		position: relative;
+		text-transform: uppercase;
+		z-index: 3;
+	}
+	@media all and (min-width: 1280px) {
+		.l-hero-panel__contents {
+			font-size: 36px;
+		}
+	}
+}

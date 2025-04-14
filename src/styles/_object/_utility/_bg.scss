@@ -1,0 +1,13 @@
+@use "../../_foundation" as f;
+
+.u-bg {
+    &__main{
+        background-color: f.$bg-main;
+    }
+    &__bg-accent01{
+        background-color: f.$bg-accent01;
+    }
+    &__lg{
+        background-color: f.$bg-lg;
+    }
+}

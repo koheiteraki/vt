@@ -1,0 +1,252 @@
+@use "../../_foundation" as f;
+
+.c-2column {
+    &1{
+        &__wrap{
+            @include f.contents-full;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        &__contents {
+            width: 40%;
+            @include f.mq(max, sm) {
+            width: 100%;
+            order: 2;
+            margin-top: 20px;
+            }
+        }
+        &__img {
+            width: 56%;
+            @include f.mq(max, sm) {
+                width: 100%;
+                order: 1;
+            }
+            &:nth-child(1) {
+                @include f.mq(min, sm) {
+                    flex: 1;
+                    margin-left: calc(50% - 50vw);
+                    margin-right: 4%;
+                }
+            }
+            &:nth-child(2) {
+                @include f.mq(min, sm) {
+                    flex: 1;
+                    margin-right: calc(50% - 50vw);
+                    margin-left: 4%;
+                }
+            }
+        }
+        &__subtitle{
+            color: f.$color-main;
+            font-weight: 500;
+        }
+        &__txt{
+            margin-top: 20px;
+            font-weight: 400;
+            @include f.mq(max, xl) {
+                margin-top: 15px;
+            }
+        }
+    }
+
+    &2{
+        &__wrap{
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+        &__contents {
+            width: 45%;
+            @include f.mq(max, sm) {
+            width: 100%;
+            order: 2;
+            margin-top: 20px;
+            }
+        }
+        &__kv {
+            width: 50%;
+            display: flex;
+            display: flex;
+            gap: 2rem;
+            @include f.mq(max, sm) {
+                width: 100%;
+                order: 1;
+            }
+        }
+        &__img{
+            img{
+                width: 100%;
+                height: 360px;
+                border-radius: .5rem;
+                object-fit: cover;
+            }
+            &:nth-child(1) {
+                margin-top: 3rem;
+                @include f.mq(min, sm) {
+                    margin-top: 5rem;
+                }
+            }
+            &:nth-child(2) {
+                margin-top: 5.7rem;
+                @include f.mq(min, sm) {
+                    margin-top: 9.7rem;
+                }
+            }
+        }
+        &__subtitle{
+            color: f.$color-main;
+            font-weight: 500;
+        }
+        &__txt{
+            margin-top: 20px;
+            font-weight: 400;
+            @include f.mq(max, xl) {
+                margin-top: 15px;
+            }
+        }
+    }
+    &3{
+        position: relative;
+        z-index: 1;
+        padding-bottom: 7%;
+        background-color: #FFF;
+        margin-bottom: 75px;
+        &__wrap{
+            width: 100%;
+            display: flex;
+            background-color: #FFF;
+        }
+        &__visual{
+            position: relative;
+            width: 50%;
+            height: 100%;
+            z-index: 1;
+            @include f.mq(max, sm) {
+            }
+            &:after {
+                background-color: f.$bg-lg;
+                width: 62%;
+                height: 70%;
+                position: absolute;
+                content: '';
+                z-index: 0;
+                bottom: -70%;
+                left: 0;
+            }
+        }
+        &__name{
+            position: absolute;
+            font-size: 2rem;
+            color: #FFF;
+            left: 17px;
+            bottom: 17px;
+            z-index: 2;
+            letter-spacing: .08em;
+            line-height: 1;
+        }
+        &__img{
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        &__batch{
+            width: 158px;
+            height: auto;
+            position: absolute!important;
+            left: -50px;
+            top: -70px;
+            z-index: -1;
+            &.is-animated {
+                -webkit-animation: batchrotate 20s linear infinite;
+                animation: batchrotate 20s linear infinite;
+            }
+        }
+        &__contents {
+            padding: 60px 0;
+            width: 50%;
+            height: auto;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            @include f.mq(max, sm) {
+            }
+            &--inner{
+                width: 100%;
+                padding: 0 15% 0 60px;
+            }
+        }
+        &__guide {
+            width: 100%;
+            display: flex!important;
+            justify-content: space-between;
+             h3 {
+                font-size: 2.2rem;
+                line-height: 1;
+                letter-spacing: .04em;
+                span {
+                    display: block;
+                    font-size: 1.2rem;
+                    margin-top: 10px;
+                    color: #b5b5b5;
+                    letter-spacing: .08em;
+                }
+            }
+        }
+        &__price {
+            font-size: 1rem;
+            color: #b5b5b5;
+            letter-spacing: .05em;
+            padding-top: 5px;
+        }
+        &__copy {
+            position: relative;
+            margin-top: 28px;
+            h3 {
+                font-size: 1.9rem;
+                line-height: 1.7;
+                letter-spacing: .08em;
+            }
+        }
+        &__copy p {
+            font-size: 1.4rem;
+            color: #666;
+            line-height: 1.65;
+            margin-top: 20px;
+            letter-spacing: .07em;
+        }
+        &__thumb {
+            width: 100%;
+            margin-top: 75px;
+            display: flex;
+            justify-content: space-between;
+            &-lst {
+                width: 46%;
+                overflow: hidden;
+            }
+        }
+    }
+
+}
+
+
+
+
+@-webkit-keyframes batchrotate { 
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+    }
+    @keyframes batchrotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

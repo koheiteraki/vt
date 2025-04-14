@@ -1,0 +1,7 @@
+@use "../../_foundation" as f;
+
+.u-text {
+  &__main {
+    color: f.$color-main;
+  }
+}

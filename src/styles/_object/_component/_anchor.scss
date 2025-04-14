@@ -1,0 +1,24 @@
+@use "../../_foundation" as f;
+
+.c-anchor {
+    &__list{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        &-item{
+            width: calc( (100% - 45px ) / 4 );
+            @include f.mq(max, xl) {
+                width: calc( (100% - 30px ) / 3 );
+            }
+            @include f.mq(max, md) {
+                width: calc( (100% - 15px ) / 2 );
+            }
+            @include f.mq(max, sm) {
+                width: 100%;
+            }
+            a{
+                width: 100%;
+            }
+        }
+    }
+}

@@ -1,0 +1,10 @@
+@charset 'utf-8';
+
+/* foundation */
+@use "./_foundation/normalize";
+@use "./_foundation/base";
+
+/* components */
+@use "./_object/_component/title";
+@use "./_object/_component/grid";
+@use "./_object/_component/flex";

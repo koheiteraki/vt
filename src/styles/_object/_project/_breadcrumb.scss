@@ -1,0 +1,43 @@
+@use "../../_foundation" as f;
+
+.p-breadcrumb {
+  &__inner {
+    display: flex;
+    flex-wrap: wrap;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  &__item {
+    display: flex;
+
+    * {
+      color: f.$color-black;
+      font-size: 1.6rem;
+      font-weight: f.$W6;
+      @include f.mq(max, sm) {
+        font-size: 1.2rem;
+      }
+    }
+
+    & + & {
+      margin-left: 5px;
+
+      &::before {
+        content: "＞";
+        display: inline-block;
+        color: f.$color-black;
+        font-size: 1.6rem;
+        font-weight: f.$W6;
+        margin-right: 5px;
+        @include f.mq(max, sm) {
+          font-size: 1.2rem;
+        }
+      }
+    }
+
+    a {
+      @include f.hover-underline;
+    }
+  }
+}

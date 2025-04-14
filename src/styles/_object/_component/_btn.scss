@@ -1,0 +1,40 @@
+@use "../../_foundation" as f;
+
+.c-btn {
+  display: block;
+  a{
+    background-color: f.$color-black;
+    border: 1px solid f.$color-black;
+    border-radius: 9999px;
+    color: f.$color-white;
+    display: inline-block;
+    font-weight: 700;
+    padding: 1rem 1.5rem;
+    min-width: 200px;
+    text-align: center;
+    &:hover{
+      background-color: f.$color-white;
+      color: f.$color-black;
+    }
+  }
+  &__main{
+    a{
+      background-color: f.$color-main;
+      border: 1px solid f.$color-main;
+      &:hover{
+        background-color: f.$color-white;
+        color: f.$color-main;
+      }
+    }
+  }
+  &__accent01{
+    a{
+      background-color: f.$color-accent01;
+      border: 1px solid f.$color-accent01;
+      &:hover{
+        background-color: f.$color-white;
+        color: f.$color-accent01;
+      }
+    }
+  }
+}

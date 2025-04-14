@@ -1,0 +1,78 @@
+@use "../../_foundation" as f;
+
+
+
+@keyframes batch-btn__inner-line-out{
+	0%{
+		-webkit-transform:rotate(90deg);
+		transform:rotate(90deg);
+		stroke-dashoffset:0;
+	}
+	to{
+		-webkit-transform:rotate(450deg);
+		transform:rotate(450deg);
+		stroke-dashoffset:-190px;
+	}
+}
+
+.c-batch {
+  width: 130px;
+  text-align: center;
+  z-index: 0;
+  margin: 50px auto 0;
+  a{
+    display: inline-block;
+    &:hover{
+      .batch-btn__inner .batch-btn__inner--line svg:last-child {
+        visibility: inherit;
+        -webkit-transition: none;
+        transition: none;
+        -webkit-animation: batch-btn__inner__line-over 1.7s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
+        animation: batch-btn__inner__line-over 1.7s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
+    }
+    }
+  }
+  &__inner{
+    position: relative;
+    width: 130px;
+    height: 130px;
+    visibility: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    &--line{
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      svg{
+        stroke-width: 0.5px;
+        &:first-child {
+          opacity: .6;
+        }
+        &:last-child {
+          stroke-dasharray: 190px 190px;
+          stroke-dashoffset: 190px;
+          visibility: hidden;
+          -webkit-transition: visibility 0s 1.7s;
+          transition: visibility 0s 1.7s;
+          -webkit-animation: batch-btn__inner-line-out 1.7s cubic-bezier(0.215, 0.61, 0.355, 1);
+          animation: batch-btn__inner-line-out 1.7s cubic-bezier(0.215, 0.61, 0.355, 1);
+        }
+      }
+    }
+    &--label{
+      font-size: 1.1rem;
+      font-weight: 400;
+      letter-spacing: .05em;
+      &:first-child {
+        margin-bottom: 0px;
+        font-size: 1.1rem;
+        letter-spacing: 0;
+      }
+    }
+  }
+
+}

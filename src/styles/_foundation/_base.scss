@@ -1,0 +1,101 @@
+// base
+
+@use "../_foundation" as f;
+
+* {
+    line-height: 1.7;
+    letter-spacing: 0.04em;
+    font-size: 1.6rem;
+  }
+  
+.wrapper{
+    max-width: 1200px;
+    width:90%;
+    margin-top: 60px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+
+h1, h2, h3, h4, h5, h6 {
+font-weight: 700;
+margin-top: 0;
+}
+
+
+
+:where(h1, h2, h3, h4, h5) {
+    font-weight: f.$W7;
+  }
+  
+  h1 {
+    font-size: 4.5rem;
+    @include f.mq(max, xl) {
+      font-size: 3.6rem;
+    }
+    @include f.mq(max, sm) {
+      font-size: 2.8rem;
+    }
+  }
+  
+  h2 {
+    font-size: 3.5rem;
+    @include f.mq(max, xl) {
+      font-size: 3rem;
+    }
+    @include f.mq(max, sm) {
+      font-size: 2.4rem;
+    }
+  }
+  
+  h3 {
+    font-size: 3rem;
+    @include f.mq(max, xl) {
+      font-size: 2.6rem;
+    }
+    @include f.mq(max, sm) {
+      font-size: 2.2rem;
+    }
+  }
+  
+  h4 {
+    font-size: 2.4rem;
+    @include f.mq(max, xl) {
+      font-size: 2.2rem;
+    }
+    @include f.mq(max, sm) {
+      font-size: 2rem;
+    }
+  }
+  
+  h5 {
+    font-size: 1.8rem;
+    @include f.mq(max, sm) {
+      font-size: 1.6rem;
+    }
+  }
+  
+
+  table {
+    width: 100%;
+    table-layout: fixed;
+  }
+  table caption {
+    padding: 20px;
+    font-size: 130%;
+  }
+  th, td {
+    padding: 20px;
+    text-align: left;
+    vertical-align: middle;
+    font-weight: normal;
+    border-bottom:1px solid #dcdbdb;
+  }
+  thead th {text-align: center;}
+  thead td {text-align: center;}
+
+section{
+  &+&{
+    margin-top: 80px;
+  }
+}

@@ -1,0 +1,108 @@
+@use "../../_foundation" as f;
+
+.p-faq {
+  & + & {
+    @include f.margin-responsive(40px);
+  }
+
+  &__q,
+  &__a {
+    display: flex;
+    padding-left: 20px;
+    padding-right: 20px;
+    @include f.mq(max, sm) {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+
+  &__q {
+    background-color: f.$color-black;
+    border-radius: 10px;
+    padding-top: 20px;
+    padding-right: 45px;
+    padding-bottom: 20px;
+    position: relative;
+    transition: f.$transition;
+    @include f.mq(max, sm) {
+      padding-top: 10px;
+      padding-bottom: 10px;
+      padding-right: 20px;
+    }
+    &:hover {
+      cursor: pointer;
+      opacity: 0.7;
+    }
+
+    &::after {
+      content: "";
+      width: 18px;
+      height: 18px;
+      border-bottom: 2px solid f.$color-white;
+      border-right: 2px solid f.$color-white;
+      transition: 0.5s;
+      position: absolute;
+      top: 25px;
+      right: 20px;
+      transform: rotate(45deg);
+      @include f.mq(max, sm) {
+        right: 15px;
+        width: 13px;
+        height: 13px;
+      }
+    }
+
+    &.is-open {
+      &::after {
+        top: 35px;
+        transform: rotate(225deg);
+      }
+    }
+
+    * {
+      color: f.$color-white;
+    }
+  }
+
+  &__a {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    align-items: center;
+    @include f.mq(max, sm) {
+      padding-top: 20px;
+      padding-bottom: 20px;
+    }
+  }
+
+  &__initial {
+    font-size: 3rem;
+    @include f.montserrat;
+    font-weight: f.$W4;
+    display: block;
+    @include f.mq(max, sm) {
+      font-size: 2rem;
+    }
+  }
+
+  &__title {
+    margin-left: 5px;
+    font-size: 3rem;
+    font-weight: f.$W6;
+    flex: 1;
+    @include f.l-spacing(100);
+    @include f.mq(max, sm) {
+      font-size: 2rem;
+    }
+  }
+
+  &__text {
+    margin-left: 40px;
+    flex: 1;
+    font-size: 1.6rem;
+    font-weight: f.$W3;
+    @include f.l-spacing(50);
+    @include f.mq(max, sm) {
+      margin-left: 10px;
+    }
+  }
+}

@@ -1,0 +1,39 @@
+@use "../../_foundation" as f;
+
+.c-banar {
+  display: block;
+  &__list{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    li{
+      width: calc( (100% - 40px ) / 3 );
+      display: flex;
+      background-color: f.$color-white;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .16));
+      @include f.mq(max, md) {
+        width: calc( (100% - 20px ) / 2 );
+      }
+      @include f.mq(max, sm) {
+        width: 100%;
+      }
+      & > a{
+        display: flex;
+        width: 100%;
+      }
+      img {
+        width: 100px;
+      }
+    }
+    &--txt {
+      font-weight: 700;
+      display: inline-block;
+      padding: 20px 35px 20px 20px;
+      position: relative;
+      width: calc(100% - 100px);
+      &-small {
+        font-size: 14px;
+    }
+  }
+  }
+}

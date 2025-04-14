@@ -1,0 +1,32 @@
+@use "../../_foundation" as f;
+
+.u{
+	&-pt {
+		@for $i from 1 through 10 {
+			&__#{$i * 10} {
+			  @include f.padding-top-responsive($i * 10px);
+			}
+		}
+	}
+	&-pr {
+		@for $i from 1 through 10 {
+			&__#{$i * 10} {
+			  @include f.padding-right-responsive($i * 10px);
+			}
+		}
+	}
+	&-pb {
+		@for $i from 1 through 10 {
+			&__#{$i * 10} {
+			  @include f.padding-bottom-responsive($i * 10px);
+			}
+		}
+	}
+	&-pl {
+		@for $i from 1 through 10 {
+			&__#{$i * 10} {
+			  @include f.padding-left-responsive($i * 10px);
+			}
+		}
+	}
+}

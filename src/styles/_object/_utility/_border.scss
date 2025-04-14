@@ -1,0 +1,11 @@
+@use "../../_foundation" as f;
+
+.u-border {
+    border: 1px solid f.$color-black;
+    &__main{
+        border-color: f.$color-main;
+    }
+    &__img{
+        border-color: f.$color-lgry;
+    }
+}

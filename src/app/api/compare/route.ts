@@ -53,6 +53,9 @@ export async function GET(request) {
     const developmentUrl = searchParams.get('developmentUrl');
     const deviceName = searchParams.get('device') || 'Desktop'; // デフォルトはデスクトップ
     const browserName = searchParams.get('browser') || 'chromium'; // デフォルトは Chromium
+    const developmentUsername = searchParams.get('developmentUsername') || '';
+    const developmentPassword = searchParams.get('developmentPassword') || '';
+    console.log('API: ', developmentUsername, developmentPassword); // ログ追加
 
     if (!productionUrl || !developmentUrl) {
       return NextResponse.json({ error: 'Missing productionUrl or developmentUrl' }, { status: 400 });
@@ -61,68 +64,111 @@ export async function GET(request) {
     // ブラウザの取得
     const browser = await browserManager.getBrowser(browserName);
 
+    // デバイス設定
     let contextOptions = {};
-    if (deviceName !== 'Desktop') {
+    let viewport = null;  // ビューポートをnullで初期化
+    if (deviceName === 'Desktop') {
+      viewport = { width: 1920, height: 1080 }; // デスクトップのビューポートを設定
+      contextOptions = {
+        viewport: viewport,
+        httpCredentials: {
+          username: developmentUsername,
+          password: developmentPassword,
+        },
+        bypassCSP: true,
+        ignoreHTTPSErrors: true,
+      };
+    } else {
       const device = devices[deviceName];
       if (!device) {
         return NextResponse.json({ error: `Invalid device name: ${deviceName}` }, { status: 400 });
       }
+      viewport = device.viewport; // モバイルデバイスのビューポートを取得
       contextOptions = {
-        ...device,
-        viewport: device.viewport, // 明示的に viewport を設定
+        ...device, // モバイルデバイスのプロファイルを適用
+        httpCredentials: {
+          username: developmentUsername,
+          password: developmentPassword,
+        },
+        bypassCSP: true,
+        ignoreHTTPSErrors: true,
       };
     }
+
 
     const context = await browser.newContext(contextOptions);
     const page = await context.newPage();
 
     try {
-      // ページの読み込み完了後にスクリーンショットを取得 (フルスクリーン)
+      // Production URL のページを読み込み
+      console.log('Navigating to production URL with authentication...');
+      await page.goto(productionUrl, { waitUntil: 'load', timeout: 35000 });
+      console.log('Production page loaded.');
 
-      async function takeScreenshotWithScroll(url) {
-        await page.goto(url, { waitUntil: 'load', timeout: 30000 }); // タイムアウトを設定
+      // スクリーンの高さ全体を取得
+      const productionHeight = await page.evaluate(() => Math.max(
+          document.body.scrollHeight, document.documentElement.scrollHeight,
+          document.body.offsetHeight, document.documentElement.offsetHeight,
+          document.body.clientHeight, document.documentElement.clientHeight
+      ));
 
-        // ページ全体をスクロール
-        await page.evaluate(async () => {
-          await new Promise((resolve) => {
-            let totalHeight = 0;
-            const distance = 500; // スクロール量
-            const timer = setInterval(() => {
-              const scrollHeight = document.body.scrollHeight;
-              window.scrollBy(0, distance);
-              totalHeight += distance;
-
-              if (totalHeight >= scrollHeight - window.innerHeight) {
-                clearInterval(timer);
-                resolve();
-              }
-            }, 100); // スクロール間隔
+      if (viewport) {
+          await page.setViewportSize({
+              width: viewport.width,
+              height: productionHeight
           });
-        });
-
-        // スクロール後のコンテンツが読み込まれるのを待つ
-        await page.waitForTimeout(500); // 必要に応じて調整
-
-        return await page.screenshot({ fullPage: true });
       }
 
 
-      const productionScreenshot = await takeScreenshotWithScroll(productionUrl);
-      const developmentScreenshot = await takeScreenshotWithScroll(developmentUrl);
+      const productionScreenshot = await page.screenshot({ fullPage: true });
 
-      // 画像比較処理
+      // Development URL のページを読み込み
+      console.log('Navigating to development URL with authentication...');
+      await page.goto(developmentUrl, {
+        waitUntil: 'load',
+        timeout: 35000,
+      });
+      console.log('Development page loaded.');
+
+      // スクリーンの高さ全体を取得
+      const developmentHeight = await page.evaluate(() => Math.max(
+          document.body.scrollHeight, document.documentElement.scrollHeight,
+          document.body.offsetHeight, document.documentElement.offsetHeight,
+          document.body.clientHeight, document.documentElement.clientHeight
+      ));
+
+      if (viewport) {
+          await page.setViewportSize({
+              width: viewport.width,
+              height: developmentHeight
+          });
+      }
+
+
+      const developmentScreenshot = await page.screenshot({ fullPage: true });
+
+      // 差分比較処理
       const img1 = PNG.sync.read(productionScreenshot);
       const img2 = PNG.sync.read(developmentScreenshot);
-      const { width, height } = img1;
+      const width = Math.min(img1.width, img2.width);
+      const height = Math.min(img1.height, img2.height);
+
+      const resizedImg1 = new PNG({ width, height });
+      const resizedImg2 = new PNG({ width, height });
+
+      PNG.bitblt(img1, resizedImg1, 0, 0, width, height, 0, 0);
+      PNG.bitblt(img2, resizedImg2, 0, 0, width, height, 0, 0);
       const diff = new PNG({ width, height });
 
+      // **差分チェックオプション**:
+      // ここに差分チェックのオプション (閾値、色など) を追加できます。
       const numDiffPixels = pixelmatch(
-        img1.data,
-        img2.data,
+        resizedImg1.data,
+        resizedImg2.data,
         diff.data,
         width,
         height,
-        { threshold: 0.2 } // 差分の閾値 (調整可能)
+        { threshold: 0.3 } // 差分の閾値 (調整可能)
       );
 
       // 差分画像をBase64エンコード
@@ -132,7 +178,7 @@ export async function GET(request) {
       return NextResponse.json({ diffImageSrc: diffImageBase64, numDiffPixels });
     } catch (e) {
       console.error(e);
-      return NextResponse.json({ error: `Screenshot or comparison error: ${e.message}` }, { status: 500 }); // より詳細なエラーメッセージ
+      return NextResponse.json({ error: `Screenshot or comparison error: ${e.message}` }, { status: 500 });
     } finally {
       await page.close();
       await context.close();

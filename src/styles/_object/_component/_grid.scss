@@ -1,0 +1,14 @@
+@use "../../_foundation" as f;
+
+
+.c-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20px;
+  &__3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  &__col{
+
+  }
+}
