@@ -1,3 +1,5 @@
+'use client';
+
 import { chromium, firefox, webkit, devices, Browser } from 'playwright';
 import pixelmatch from 'pixelmatch';
 import { PNG } from 'pngjs';
