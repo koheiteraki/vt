@@ -4,6 +4,7 @@ import { PNG } from 'pngjs';
 import { NextResponse } from 'next/server';
 
 
+
 // ブラウザのシングルトンインスタンスを管理するためのクラス
 class BrowserManager {
   private browser: Browser | null; // 型定義を追加
