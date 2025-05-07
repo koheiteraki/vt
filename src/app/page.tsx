@@ -12,24 +12,24 @@ export default function Home() {
 
   const router = useRouter();
 
-  const handleProductionUrlChange = (event) => {
+  const handleProductionUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setProductionUrl(event.target.value);
   };
 
-  const handleDevelopmentUrlChange = (event) => {
+  const handleDevelopmentUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDevelopmentUrl(event.target.value);
   };
 
 
-  const handleDevelopmentUsernameChange = (event) => {
+  const handleDevelopmentUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDevelopmentUsername(event.target.value);
   };
 
-  const handleDevelopmentPasswordChange = (event) => {
+  const handleDevelopmentPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDevelopmentPassword(event.target.value);
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // デフォルトのフォーム送信を防止
     // URLをクエリパラメータとして /compare ページに遷移
     const url = new URL('/compare', window.location.origin);

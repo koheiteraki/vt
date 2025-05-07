@@ -25,7 +25,7 @@ export default function Header() {
             <div className={styles.header_bar}>
                 <div className={styles.header_logo}>
                     <Link href='/'>
-                    <Image className={styles.img} src="https://placehold.jp/150x50.png" alt="logo" width={400} height={400} />
+                    <Image className={styles.img} src="/common/logo.png" alt="logo" width={400} height={400} />
                     </Link>
                 </div>
                 <button id="js-header_hum" className={styles.header_hum} aria-label="Menu Open" aria-expanded={isOpen} onClick={toggleMenu} aria-controls="header__panel">
@@ -38,16 +38,16 @@ export default function Header() {
             <nav className={`${styles.header_nav} ${isOpen ? styles.is_open : ""}`}>
                     <ul className={styles.header_nav_list}>
                     <li>
-                        <Link onClick={handleLinkClick} href={'#'}>PRODUCTS</Link>
+                        <Link onClick={handleLinkClick} href={'#'}>hoge</Link>
                     </li>
                     <li>
-                        <Link onClick={handleLinkClick} href={'#'}>ABOUT</Link>
+                        <Link onClick={handleLinkClick} href={'#'}>hogehoge</Link>
                     </li>
                     <li>
-                        <Link onClick={handleLinkClick} href={'#'}>COMPANY</Link>
+                        <Link onClick={handleLinkClick} href={'#'}>hogehogehoge</Link>
                     </li>
                     <li>
-                        <Link onClick={handleLinkClick} href={'#'}>CONTACT</Link>
+                        <Link onClick={handleLinkClick} href={'#'}>hogehogehogehoge</Link>
                     </li>
                     </ul>
                 </nav>

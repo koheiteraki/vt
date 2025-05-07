@@ -1,15 +1,17 @@
-import { chromium, firefox, webkit, devices } from 'playwright';
+import { chromium, firefox, webkit, devices, Browser } from 'playwright';
 import pixelmatch from 'pixelmatch';
 import { PNG } from 'pngjs';
 import { NextResponse } from 'next/server';
 
+
 // ブラウザのシングルトンインスタンスを管理するためのクラス
 class BrowserManager {
+  private browser: Browser | null; // 型定義を追加
   constructor() {
     this.browser = null;
   }
 
-  async getBrowser(browserName) {
+  async getBrowser(browserName: string): Promise<Browser> {
     if (this.browser) {
       return this.browser; // ブラウザが既に起動している場合は再利用
     }
@@ -30,7 +32,7 @@ class BrowserManager {
     return this.browser;
   }
 
-  async closeBrowser() {
+  async closeBrowser(): Promise<void> {
     if (this.browser) {
       await this.browser.close();
       this.browser = null;
@@ -38,15 +40,15 @@ class BrowserManager {
   }
 
   // 定期的なブラウザの再起動
-  async restartBrowser(browserName) {
+  async restartBrowser(browserName: string): Promise<Browser> {
     await this.closeBrowser();
-    this.browser = await this.getBrowser(browserName);
+    return this.getBrowser(browserName);
   }
 }
 
 const browserManager = new BrowserManager();
 
-export async function GET(request) {
+export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const productionUrl = searchParams.get('productionUrl');
@@ -65,7 +67,7 @@ export async function GET(request) {
     const browser = await browserManager.getBrowser(browserName);
 
     // デバイス設定
-    let contextOptions = {};
+    let contextOptions: Record<string, string | number | boolean | object | null> = {};
     let viewport = null;  // ビューポートをnullで初期化
     if (deviceName === 'Desktop') {
       viewport = { width: 1920, height: 1080 }; // デスクトップのビューポートを設定
@@ -78,14 +80,11 @@ export async function GET(request) {
         bypassCSP: true,
         ignoreHTTPSErrors: true,
       };
-    } else {
-      const device = devices[deviceName];
-      if (!device) {
-        return NextResponse.json({ error: `Invalid device name: ${deviceName}` }, { status: 400 });
-      }
-      viewport = device.viewport; // モバイルデバイスのビューポートを取得
+    } else if (deviceName === 'iPhone') {
+      const device = devices['iPhone 11'];
+      viewport = device.viewport;
       contextOptions = {
-        ...device, // モバイルデバイスのプロファイルを適用
+        ...device,
         httpCredentials: {
           username: developmentUsername,
           password: developmentPassword,
@@ -93,6 +92,28 @@ export async function GET(request) {
         bypassCSP: true,
         ignoreHTTPSErrors: true,
       };
+            // Firefox の場合は isMobile を削除
+            if (browserName === 'firefox') {
+              delete contextOptions.isMobile;
+            }
+    } else if (deviceName === 'Android') {
+      const device = devices['Pixel 5'];
+      viewport = device.viewport;
+      contextOptions = {
+        ...device,
+        httpCredentials: {
+          username: developmentUsername,
+          password: developmentPassword,
+        },
+        bypassCSP: true,
+        ignoreHTTPSErrors: true,
+      };
+            // Firefox の場合は isMobile を削除
+            if (browserName === 'firefox') {
+              delete contextOptions.isMobile;
+            }
+    } else {
+      return NextResponse.json({ error: `Invalid device name: ${deviceName}` }, { status: 400 });
     }
 
 
@@ -101,51 +122,68 @@ export async function GET(request) {
 
     try {
       // Production URL のページを読み込み
-      console.log('Navigating to production URL with authentication...');
-      await page.goto(productionUrl, { waitUntil: 'load', timeout: 35000 });
-      console.log('Production page loaded.');
+      console.log('production URLを読み込み中です');
+      await page.goto(productionUrl, { waitUntil: 'load', timeout: 40000 });
+      // ページをスクロールしてすべての要素を表示
+      await page.evaluate(async () => {
+        await new Promise<void>((resolve) => {
+            let totalHeight = 0;
+            const distance = 100;
+            const scroll = () => {
+                const scrollHeight = document.body.scrollHeight;
+                window.scrollBy(0, distance);
+                totalHeight += distance;
+    
+                if (totalHeight >= scrollHeight) {
+                    resolve();
+                    return;
+                }
+    
+                requestAnimationFrame(scroll);
+            };
+            scroll();
+        });
+    });
+      console.log('Production URLの読み込みが完了しました');
 
-      // スクリーンの高さ全体を取得
-      const productionHeight = await page.evaluate(() => Math.max(
-          document.body.scrollHeight, document.documentElement.scrollHeight,
-          document.body.offsetHeight, document.documentElement.offsetHeight,
-          document.body.clientHeight, document.documentElement.clientHeight
-      ));
-
-      if (viewport) {
-          await page.setViewportSize({
-              width: viewport.width,
-              height: productionHeight
-          });
-      }
-
-
+      // スクロール後に2秒待機
+      await page.waitForTimeout(2000);
+      // スクロール後にスクリーンショットを取得
       const productionScreenshot = await page.screenshot({ fullPage: true });
+      console.log('Production URLのスクショが完了しました');
 
       // Development URL のページを読み込み
-      console.log('Navigating to development URL with authentication...');
+      console.log('development URLを読み込み中です');;
       await page.goto(developmentUrl, {
         waitUntil: 'load',
-        timeout: 35000,
+        timeout: 40000,
       });
-      console.log('Development page loaded.');
-
-      // スクリーンの高さ全体を取得
-      const developmentHeight = await page.evaluate(() => Math.max(
-          document.body.scrollHeight, document.documentElement.scrollHeight,
-          document.body.offsetHeight, document.documentElement.offsetHeight,
-          document.body.clientHeight, document.documentElement.clientHeight
-      ));
-
-      if (viewport) {
-          await page.setViewportSize({
-              width: viewport.width,
-              height: developmentHeight
+            // ページをスクロールしてすべての要素を表示
+            await page.evaluate(async () => {
+              await new Promise<void>((resolve) => {
+                  let totalHeight = 0;
+                  const distance = 100;
+                  const scroll = () => {
+                      const scrollHeight = document.body.scrollHeight;
+                      window.scrollBy(0, distance);
+                      totalHeight += distance;
+          
+                      if (totalHeight >= scrollHeight) {
+                          resolve();
+                          return;
+                      }
+          
+                      requestAnimationFrame(scroll);
+                  };
+                  scroll();
+              });
           });
-      }
+      console.log('Development URLの読み込みが完了しました');
 
-
+      // スクロール後に2秒待機
+      await page.waitForTimeout(4000);
       const developmentScreenshot = await page.screenshot({ fullPage: true });
+      console.log('Development URLのスクショが完了しました');
 
       // 差分比較処理
       const img1 = PNG.sync.read(productionScreenshot);
@@ -168,24 +206,36 @@ export async function GET(request) {
         diff.data,
         width,
         height,
-        { threshold: 0.3 } // 差分の閾値 (調整可能)
+        { threshold: 0.7, }
+         // 差分の閾値 (調整可能)
       );
 
+      const productionImageBase64 = `data:image/png;base64,${productionScreenshot.toString('base64')}`;
+      const developmentImageBase64 = `data:image/png;base64,${developmentScreenshot.toString('base64')}`;
       // 差分画像をBase64エンコード
       const diffImageBuffer = PNG.sync.write(diff);
       const diffImageBase64 = `data:image/png;base64,${diffImageBuffer.toString('base64')}`;
 
-      return NextResponse.json({ diffImageSrc: diffImageBase64, numDiffPixels });
+      return NextResponse.json({
+        diffImageSrc: diffImageBase64,
+        numDiffPixels,
+        productionImageSrc: productionImageBase64,
+        developmentImageSrc: developmentImageBase64,
+      });
     } catch (e) {
-      console.error(e);
-      return NextResponse.json({ error: `Screenshot or comparison error: ${e.message}` }, { status: 500 });
+      if (e instanceof Error) {
+        console.error(e.message); // エラーメッセージを安全に取得
+      } else {
+        console.error('An unknown error occurred:', e); // 型が不明な場合の処理
+      }
+      return NextResponse.json({ error: `Screenshot or comparison error: ${e instanceof Error ? e.message : 'Unknown error'}` }, { status: 500 });
     } finally {
       await page.close();
       await context.close();
     }
   } catch (e) {
-    console.error(e);
-    return NextResponse.json({ error: `General error: ${e.message}` }, { status: 500 }); // より詳細なエラーメッセージ
+    console.error('Unknown error:', e); // 型が不明な場合の処理
+    return NextResponse.json({ error: 'An unknown error occurred.' }, { status: 500 });
   }
 }
 

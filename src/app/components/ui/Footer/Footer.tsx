@@ -10,7 +10,7 @@ export default function Footer() {
                 </span>
                 <ul className="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
                     <li>
-                        <Link href="/products/" className="hover:underline me-4 md:me-6">製品一覧</Link>
+                        <Link href="#" className="hover:underline me-4 md:me-6">hoge</Link>
                     </li>
                     <li>
                         <Link href="#" className="hover:underline me-4 md:me-6">hogehoge</Link>

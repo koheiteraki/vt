@@ -2,40 +2,32 @@
 
 import PageTitle from '@/app/components/PageTitle/PageTitle';
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 export default function Compare() {
   const router = useRouter();
   const [diffImageSrc, setDiffImageSrc] = useState(null);
-  const [error, setError] = useState(null);
+  const [productionImageSrc, setproductionImageSrc] = useState(null);
+  const [developmentImageSrc, setdevelopmentImageSrc] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [numDiffPixels, setNumDiffPixels] = useState(0);
+  const [productionUrl, setProductionUrl] = useState('');
+  const [developmentUrl, setDevelopmentUrl] = useState('');
   const [selectedDevice, setSelectedDevice] = useState('Desktop');
   const [selectedBrowser, setSelectedBrowser] = useState('chromium');
-  const [developmentUsername, setDevelopmentUsername] = useState('');
-  const [developmentPassword, setDevelopmentPassword] = useState('');
-
-  const handleDeviceChange = (event) => {
-    setSelectedDevice(event.target.value);
-  };
-
-  const handleBrowserChange = (event) => {
-    setSelectedBrowser(event.target.value);
-  };
 
   useEffect(() => {
     const { searchParams } = new URL(window.location.href);
-    const productionUrl = searchParams.get('productionUrl');
-    const developmentUrl = searchParams.get('developmentUrl');
+    const productionUrlFromParams = searchParams.get('productionUrl');
+    const developmentUrlFromParams = searchParams.get('developmentUrl');
     const developmentUsername = searchParams.get('developmentUsername') || '';
     const developmentPassword = searchParams.get('developmentPassword') || '';
 
-    setDevelopmentUsername(developmentUsername);
-    setDevelopmentPassword(developmentPassword);
-
-
-    if (!productionUrl || !developmentUrl) {
-      document.body.innerHTML = `
+  if (!productionUrlFromParams || !developmentUrlFromParams) {
+    document.body.innerHTML = `
         <div style="color: red; text-align: center; margin-top: 20px;">
           <h1>Error</h1>
           <p>「productionUrl または developmentUrl が不足しています」</p>
@@ -46,24 +38,33 @@ export default function Compare() {
       return;
     }
 
+    setProductionUrl(productionUrlFromParams);
+    setDevelopmentUrl(developmentUrlFromParams);
+
     const fetchData = async () => {
       setLoading(true);
       try {
         const response = await fetch(
-          `/api/compare?productionUrl=${productionUrl}&developmentUrl=${developmentUrl}&device=${selectedDevice}&browser=${selectedBrowser}&developmentUsername=${developmentUsername}&developmentPassword=${developmentPassword}`
+       `/api/compare?productionUrl=${productionUrlFromParams}&developmentUrl=${developmentUrlFromParams}&device=${selectedDevice}&browser=${selectedBrowser}&developmentUsername=${developmentUsername}&developmentPassword=${developmentPassword}`
         );
         const data = await response.json();
         console.log('API Response:', data); // レスポンスデータをコンソールに出力
 
         if (response.ok) {
           setDiffImageSrc(data.diffImageSrc);
+          setproductionImageSrc(data.productionImageSrc);
+          setdevelopmentImageSrc(data.developmentImageSrc);
           setNumDiffPixels(data.numDiffPixels);
         } else {
           setError(data.error || 'An error occurred');
         }
       } catch (error) {
         console.error(error);
-        setError(error.message);
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError('An unknown error occurred');
+        }
       } finally {
         setLoading(false);
       }
@@ -77,51 +78,101 @@ export default function Compare() {
 
   return (
     <div>
-        <PageTitle title="Visual Regression Test" description="差分テスト結果" />
-        <div className="container mx-auto">
-          <div className="mt-10 grid grid-cols-3 gap-4 justify-center">
-            <div>
-            <label htmlFor="device" className="block text-sm font-medium text-gray-700">Device:</label>
-            <select
-              id="device"
-              value={selectedDevice}
-              onChange={handleDeviceChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+      
+      <PageTitle title="Visual Regression Test" description="差分テスト結果" />
+      <div className="container mx-auto">
+      <div className="mt-8">
+        <h2 className="text-lg font-bold">Select Device</h2>
+        <div className="flex space-x-4 mt-4">
+          {['Desktop', 'iPhone', 'Android'].map((device) => (
+            <button
+              key={device}
+              onClick={() => setSelectedDevice(device)}
+              className={`px-4 py-2 rounded-md ${
+                selectedDevice === device
+                  ? 'bg-indigo-500 text-white'
+                  : 'bg-gray-200 text-gray-700'
+              }`}
             >
-              <option value="Desktop">Desktop</option>
-              <option value="iPhone 11">iPhone 11</option>
-              {/* 他のデバイスオプション */}
-            </select>
-          </div>
-
-          <div>
-            <label htmlFor="browser" className="block text-sm font-medium text-gray-700">Browser:</label>
-            <select
-              id="browser"
-              value={selectedBrowser}
-              onChange={handleBrowserChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-            >
-              <option value="chromium">Chromium</option>
-              <option value="firefox">Firefox</option>
-              <option value="webkit">WebKit</option>
-            </select>
-          </div>
+              {device}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {diffImageSrc ? (
-        <>
-          {/* <p>Differences found: {numDiffPixels} pixels</p> */}
-          <p className='mt-6'>画像の差分</p>
-          {/* 画像を表示するためのimgタグ */}
-          <div className="mt-4 mx-auto max-w-4xl">
-          <img src={diffImageSrc} alt="Diff Image" />
+        <div className="mt-8">
+          <h2 className="text-lg font-bold">Select Browser</h2>
+          <div className="flex space-x-4 mt-4">
+            {['chromium', 'firefox', 'webkit'].map((browser) => (
+              <button
+                key={browser}
+                onClick={() => setSelectedBrowser(browser)}
+                className={`px-4 py-2 rounded-md ${
+                  selectedBrowser === browser
+                    ? 'bg-indigo-500 text-white'
+                    : 'bg-gray-200 text-gray-700'
+                }`}
+              >
+                {browser}
+              </button>
+            ))}
           </div>
-        </>
-      ) : (
-        <p>No differences found or comparison pending.</p>
-      )}
+        </div>
+        {diffImageSrc ? (
+          <>
+            <h2 className="text-lg font-bold mt-6">画像の差分結果</h2>
+            <p className="text-md mt-2">差分ピクセル数: {numDiffPixels}</p>
+            <div className="flex mt-4">
+              <div className="w-1/3">
+                <h3 className="text-md font-semibold">Production</h3>
+                <h4>
+                    <Link href={productionUrl} target='blank' className='underline decoration-slate-50'>{productionUrl}</Link>
+                </h4>
+                {productionImageSrc ? (
+                  <Image
+                    src={productionImageSrc}
+                    alt="Production Screenshot"
+                    width={400}
+                    height={300}
+                    className="mt-4 border rounded-md"
+                  />
+                ) : (
+                  <p>Production image not available</p>
+                )}
+              </div>
+              <div className="w-1/3">
+                <h3 className="text-md font-semibold">Development</h3>
+                <h4>
+                    <Link href={developmentUrl} target='blank' className='underline decoration-slate-50'>{developmentUrl}</Link>
+                </h4>
+                {developmentImageSrc ? (
+                  <Image
+                    src={developmentImageSrc}
+                    alt="development Screenshot"
+                    width={400}
+                    height={300}
+                    className="mt-4 border rounded-md"
+                  />
+                ) : (
+                  <p>Production image not available</p>
+                )}
+              </div>
+              <div className="w-1/3">
+                <h3 className="text-md font-semibold">差分画像</h3>
+                <Image
+                  src={diffImageSrc}
+                  alt="Diff Image"
+                  width={400}
+                  height={300}
+                  className="mt-4 border rounded-md"
+                />
+              </div>
             </div>
+          </>
+        ) : (
+          <p>No differences found or comparison pending.</p>
+        )}
+      </div>
     </div>
   );
 }
