@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-   "postinstall": "playwright install chromium"
+    "postinstall": "playwright install chromium"
   },
   "dependencies": {
     "bootstrap": "^5.3.5",

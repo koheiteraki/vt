@@ -237,13 +237,3 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'An unknown error occurred.' }, { status: 500 });
   }
 }
-
-// API が終了する際にブラウザを閉じる (例: Next.js アプリケーションの終了時)
-process.on('exit', async () => {
-  await browserManager.closeBrowser();
-});
-
-// 定期的なブラウザの再起動 (例: 1時間ごと)
-setInterval(async () => {
-  await browserManager.restartBrowser('chromium'); // chromium を再起動
-}, 3600000);
