@@ -1,0 +1,183 @@
+@use "../../_foundation" as f;
+
+.c-flow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    padding-right: 40px;
+    padding-left: 40px;
+    &+& {
+        margin-top: 40px;
+    }
+    
+&__num {
+    color: #1f395b;
+    font-size: 3.6rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 1.8px;
+    width: 100px;
+    padding-right: 40px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+&__num-text {
+    color: #707070;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: 0.8px;
+}
+
+&__wrapper {
+    width: calc(100% - 100px);
+    padding-left: 40px;
+    border-left: 1px solid #ddd;
+}
+
+&__a,
+&__q {
+    display: flex;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+&__q {
+    background-color: #f5f5f5;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    border: 1px solid #ddd;
+    transition: all 0.2s;
+}
+
+&__a {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    border: 1px solid #ddd;
+    align-items: center;
+}
+
+&__initial {
+    font-size: 3rem;
+    font-weight: 700;
+    display: block;
+}
+
+&__title {
+    margin-left: 40px;
+    margin-bottom: 0;
+    font-weight: 700;
+    flex: 1;
+    color: #1f395b;
+    font-size: 2rem;
+}
+
+&__text {
+    margin-left: 40px;
+    flex: 1;
+    font-size: 1.6rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+}
+
+}
+
+
+.c-customflow{
+    &__list{
+        @include f.margin-responsive(60px);
+        li{
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            max-width: 960px;
+            margin: 0 auto;
+            padding-top: 30px;
+            &:first-of-type{
+                padding-top: 0;
+            }
+            &:last-of-type{
+                .c-customflow__list--img::before {
+                    display: none;
+                }
+            }
+        }
+        &--img{
+            width: 182px;
+            position: relative;
+            z-index: 2;
+            @include f.mq(max, md) {
+                width: 115px;
+              }
+            &::before{
+                background: url(../other/flow-dots.svg) repeat center center / contain;
+                content: "";
+                height: 66px;
+                left: calc(50% - 1px);
+                position: absolute;
+                top: 100%;
+                width: 2px;
+                z-index: -1;
+                height: 100%;
+            }
+        }
+        &--txts {
+            width: calc(100% - 228px);
+            font-size: clamp(14px, 2vw, 18px); // 可変式の文字サイズ
+            @include f.mq(max, md) {
+                width: calc(100% - 130px);
+              }
+        }
+        &--num {
+            font-weight: 900;
+            font-size: clamp(14px, 1.5vw, 17px); // 可変式の文字サイズ
+            letter-spacing: 0.02em;
+        }
+        &--head {
+            font-weight: 700;
+            font-size: clamp(20px, 2.5vw, 28px); // 可変式の文字サイズ
+            margin-top: 10px;
+            @include f.mq(max, md) {
+                margin-top: 5px;
+              }
+        }
+        &--txt {
+            margin-top: 15px;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            @include f.mq(max, md) {
+                margin-top: 10px;
+              }
+        }
+        &--caution {
+            position: relative;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            margin-top: 12px;
+            padding-left: 22px;
+            &::before {
+                background: url(../img/top/!.webp) no-repeat center center / contain;
+                content: '';
+                height: 18px;
+                left: 0;
+                position: absolute;
+                top: 6px;
+                width: 18px;
+            }
+        }
+    }
+
+}

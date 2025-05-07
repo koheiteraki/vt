@@ -1,0 +1,51 @@
+// variable
+
+//  画像パス指定 #{$**}
+$img: "/assets/image/";
+// 使用例: background-image: url(#{$img}example.jpg);
+
+//  color
+$color-main: #245e96; // 使用例: color: f.$color-main;
+$color-accent01: #329bbd; // 使用例: color: f.$color-accent01;
+$color-black: #333; // 使用例: color: f.$color-black;
+$color-white: #fff; // 使用例: color: f.$color-white;
+$color-lgry: #E2E2E2; // 使用例: border: 1px solid f.$color-lgry;
+$color-gry: #A5A5A5; // 使用例: border: 1px solid f.$color-gry;
+$bg-main: #245e96; // 使用例: background-color: f.$bg-main;
+$bg-accent01: #329bbd; // 使用例: background-color: f.$bg-accent01;
+$bg-lg: #f5f5f5; // 使用例: background-color: f.$bg-lg;
+
+// font-weight
+$W3: 300; // 使用例: font-weight: f.$W3;
+$W4: 400; // 使用例: font-weight: f.$W4;
+$W5: 500; // 使用例: font-weight: f.$W5;
+$W6: 600; // 使用例: font-weight: f.$W6;
+$W7: 700; // 使用例: font-weight: f.$W7;
+$W8: 800; // 使用例: font-weight: f.$W8;
+$W9: 900; // 使用例: font-weight: f.$W9;
+
+// content-width
+$content-width: 1120px; // 使用例: max-width: f.$content-width;
+// $content-width-md: 1120px; // 使用例: max-width: f.$content-width-md;
+
+// Border Radius (角丸のための変数):
+$border-radius-sm: 4px; // 使用例: border-radius: f.$border-radius-sm;
+$border-radius-md: 8px; // 使用例: border-radius: f.$border-radius-md;
+$border-radius-lg: 16px; // 使用例: border-radius: f.$border-radius-lg;
+
+// Shadows (シャドウのための変数)
+$shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1); // 使用例: box-shadow: f.$shadow-sm;
+$shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1); // 使用例: box-shadow: f.$shadow-md;
+$shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.1); // 使用例: box-shadow: f.$shadow-lg;
+
+// icon font
+$font-arr: "\EA01"; // 使用例: content: f.$font-arr;
+$font-search: "\EA02"; // 使用例: content: f.$font-search;
+$font-request: "\EA03"; // 使用例: content: f.$font-request;
+$font-consultation: "\EA04"; // 使用例: content: f.$font-consultation;
+$font-seminar: "\EA05"; // 使用例: content: f.$font-seminar;
+$font-download: "\EA06"; // 使用例: content: f.$font-download;
+
+// Transitions
+$transition: all 0.2s ease-in; // 使用例: transition: f.$transition;
+$transition-cb: transform 0.6s cubic-bezier(0.85, 0, 0.15, 1); // 使用例: transition: f.$transition-cb;

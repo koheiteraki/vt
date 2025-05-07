@@ -1,0 +1,64 @@
+@use "../../_foundation" as f;
+
+
+.c-flex {
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  &+& {
+    margin-top: 60px;
+  }
+  &__2 {
+    width: 48%;
+    margin-right: 4%;
+    &:nth-child(2n) {
+      margin-right: 0;
+    }
+    @include f.mq(max, sm) {
+      width: 100%;
+      margin-right: 0%;
+      &:nth-child(2n) {
+        margin-top: 20px;
+      }
+    }
+    &.-text {
+      @include f.mq(max, sm) {
+        order: 2;
+        margin-top: 20px;
+      }
+    }
+    &.-img {
+      @include f.mq(max, sm) {
+        order: 1;
+        margin-top: 0;
+      }
+    }
+  }
+  &__3 {
+    width: 30%;
+    margin-right: 5%;
+    @include f.mq(min, md) {
+      &:nth-child(n + 4) {
+        margin-top: 5%;
+      }
+      &:nth-child(3n) {
+        margin-right: 0;
+      }
+    }
+    @include f.mq(max, md) {
+      width: 48%;
+      margin-right: 4%;
+      &:nth-child(2n) {
+        margin-right: 0;
+      }
+      &:nth-child(n + 3) {
+        margin-top: 4%;
+      }
+    }
+    @include f.mq(max, sm) {
+      width: 100%;
+      margin-right: 0%;
+      margin-top: 30px;
+    }
+  }
+}

@@ -1,0 +1,422 @@
+@use "../../_foundation" as f;
+.p-mv{
+    height: 100vh;
+    min-height: 600px;
+    max-height: 1200px;
+    position: relative;
+    z-index: 0;
+    overflow: hidden;
+    @include f.contents-full;
+    &::before {
+        background-image: url("../image/AdobeStock_586878989_Preview.jpeg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        content: "";
+        min-height: 500px;
+        position: absolute;
+        top: 50%;
+        right: 0%;
+        transform: translate(0%,-50%);
+        width: 50%;
+        z-index: -1;
+    }
+    &::after{
+      content: "";
+      right: 0;
+      bottom: 0;
+      height: 200px;
+      width: 40%;
+      z-index: -2;
+      position: absolute;
+      background-color: rgba(0, 0, 0, 1);
+    }
+    &__inner{
+        height: 100%;
+        @include f.contents;
+    }
+    &__img{
+        img{
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+    }
+    &__txt{
+        height: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        // align-items: center;
+        justify-content: center;
+    }
+    &__title,
+    &__lead{
+      color: f.$color-main;
+    }
+    // &-line-01 {
+    //   width: 149%;
+    //   height: 169%;
+    //   background: url("../image/mv-line-01.png") no-repeat center/100% 100%;
+    //   animation: mv-line-01 40s ease-in-out infinite;
+    //   position: absolute;
+    //   bottom: 0;
+    //   left: -5rem;
+    //   z-index: 1;
+    //   transform: translate(0, 0);
+    // }
+
+    // &-line-02 {
+    //   width: 138%;
+    //   height: 180%;
+    //   background: url("../image/mv-line-02.png") no-repeat top center/100% 100%;
+    //   animation: mv-line-02 30s ease-in-out infinite;
+    //   position: absolute;
+    //   top: -21rem;
+    //   left: 50%;
+    //   z-index: 1;
+    //   transform: translate(-50%, 0);
+    // }
+}
+
+
+@keyframes mv-line-01 {
+  0% {
+    transform: translate(0, 5rem);
+  }
+  50% {
+    transform: translate(10%, -5rem);
+  }
+  100% {
+    transform: translate(0, 5rem);
+  }
+}
+@keyframes mv-line-02 {
+  0% {
+    transform: translate(-50%, 0);
+  }
+  50% {
+    transform: translate(-50%, -7rem);
+  }
+  100% {
+    transform: translate(-50%, 0);
+  }
+}
+@keyframes mv-line-01-sp {
+  0% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(0, 10%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+@keyframes mv-line-02-sp {
+  0% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(0, -15%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+.mv-cube{
+    height: 100vh;
+    min-height: 600px;
+    position: relative;
+    z-index: 0;
+    background-color: f.$bg-main;
+    @include f.contents-full;
+    &__inner{
+        height: 100%;
+        @include f.contents;
+    }
+    // &__img{
+    //     img{
+    //         height: 100%;
+    //         width: 100%;
+    //         object-fit: cover;
+    //     }
+    // }
+    &__txt{
+        height: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        justify-content: center;
+    }
+    &__right{
+        position: absolute;
+        top: 50%;
+        right: 0;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+    &__box{
+        width: 300px;
+        height: 300px;
+        -webkit-transform-style: preserve-3d;
+        transform-style: preserve-3d;
+        -webkit-animation: cubeRotate 10s linear infinite;
+        animation: cubeRotate 10s linear infinite;
+        @include f.mq(max, md) {
+            width: 200px;
+            height: 200px;
+        }
+        &-side{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            // opacity: 0.9;
+            border: 2px solid white;
+        }
+        &-front{
+            background-image: url(https://placehold.jp/150x150.png);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            content: "";
+            left: 0;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            z-index: -1;
+            -webkit-transform: translateZ(150px);
+            transform: translateZ(150px);
+            @include f.mq(max, md) {
+                -webkit-transform: translateZ(100px);
+                transform: translateZ(100px);
+            }
+        }
+        &-back{
+            background-image: url(https://placehold.jp/3d4070/ffffff/150x150.png);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            -webkit-transform: translateZ(-150px);
+            transform: translateZ(-150px);
+            @include f.mq(max, md) {
+                -webkit-transform: translateZ(100px);
+                transform: translateZ(100px);
+            }
+        }
+        &-left{
+            background-image: url(https://placehold.jp/000/ffffff/150x150.png);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            -webkit-transform: rotateY(90deg) translateZ(150px);
+            transform: rotateY(90deg) translateZ(150px);
+            @include f.mq(max, md) {
+                -webkit-transform: rotateY(90deg) translateZ(100px);
+                transform: rotateY(90deg) translateZ(100px);
+            }
+        }
+        &-right{
+            background-image: url(https://placehold.jp/0091ea/ffffff/150x150.png);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            -webkit-transform: rotateY(-90deg) translateZ(150px);
+            transform: rotateY(-90deg) translateZ(150px);
+            @include f.mq(max, md) {   
+                -webkit-transform: rotateY(-90deg) translateZ(100px);
+                transform: rotateY(-90deg) translateZ(100px);
+            }
+        }
+        &-top{
+            background-image: url(https://placehold.jp/00bfa5/ffffff/150x150.png);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            -webkit-transform: rotateX(90deg) translateZ(150px);
+            transform: rotateX(90deg) translateZ(150px);
+            @include f.mq(max, md) {
+                -webkit-transform: rotateX(90deg) translateZ(100px);
+                transform: rotateX(90deg) translateZ(100px);
+            }
+        }
+
+        &-bottom{
+            background-image: url(https://placehold.jp/666/ffffff/150x150.png);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            -webkit-transform: rotateX(-90deg) translateZ(150px);
+            transform: rotateX(-90deg) translateZ(150px);
+            @include f.mq(max, md) {
+                -webkit-transform: rotateX(-90deg) translateZ(100px);
+                transform: rotateX(-90deg) translateZ(100px);
+            }
+        }
+    }
+}
+
+
+@-webkit-mainframes cubeRotate {
+    from {
+      -webkit-transform: rotateY(0deg) rotateX(720deg) rotateZ(0deg);
+              transform: rotateY(0deg) rotateX(720deg) rotateZ(0deg);
+    }
+    to {
+      -webkit-transform: rotateY(360deg) rotateX(0deg) rotateZ(360deg);
+              transform: rotateY(360deg) rotateX(0deg) rotateZ(360deg);
+    }
+  }
+  
+  @keyframes cubeRotate {
+    from {
+      -webkit-transform: rotateY(0deg) rotateX(720deg) rotateZ(0deg);
+              transform: rotateY(0deg) rotateX(720deg) rotateZ(0deg);
+    }
+    to {
+      -webkit-transform: rotateY(360deg) rotateX(0deg) rotateZ(360deg);
+              transform: rotateY(360deg) rotateX(0deg) rotateZ(360deg);
+    }
+  }
+
+.mv-slide{
+    position: relative;
+    width: calc(min(90rem, 90%));
+    margin: 0 auto;
+    min-height: 100vh;
+    column-gap: 3rem;
+    padding-block: min(20vh, 3rem);
+
+    @include f.mq(min, md) {
+        display: flex;
+        align-items: center;
+    }
+
+    
+.swiper {
+    width: 100%;
+    padding-top: 3.125rem;
+  }
+  
+  .swiper-pagination-bullet,
+  .swiper-pagination-bullet-active {
+    background: #fff;
+  }
+  
+  .swiper-pagination {
+    bottom: 1.25rem !important;
+  }
+  
+  .swiper-slide {
+    width: 18.75rem;
+    height: 28.125rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: self-start;
+  }
+
+  
+.swiper-slide-active div {
+    display: block;
+    opacity: 1;
+  }
+  
+  .swiper-slide--one {
+    background: linear-gradient(to top, #0f2027, #203a4300, #2c536400),
+      url("https://images.unsplash.com/photo-1628944682084-831f35256163?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80")
+        no-repeat 50% 50% / cover;
+  }
+  
+  .swiper-slide--two {
+    background: linear-gradient(to top, #0f2027, #203a4300, #2c536400),
+      url("https://images.unsplash.com/photo-1515309025403-4b0184873cef?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80")
+        no-repeat 50% 50% / cover;
+  }
+  
+  .swiper-slide--three {
+    background: linear-gradient(to top, #0f2027, #203a4300, #2c536400),
+      url("https://images.unsplash.com/photo-1545671913-b89ac1b4ac10?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80")
+        no-repeat 50% 50% / cover;
+  }
+  
+  .swiper-slide--four {
+    background: linear-gradient(to top, #0f2027, #203a4300, #2c536400),
+      url("https://images.unsplash.com/photo-1598977123118-4e30ba3c4f5b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80")
+        no-repeat 50% 50% / cover;
+  }
+  
+  .swiper-slide--five {
+    background: linear-gradient(to top, #0f2027, #203a4300, #2c536400),
+      url("https://images.unsplash.com/photo-1570481662006-a3a1374699e8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=765&q=80")
+        no-repeat 50% 50% / cover;
+  }
+  
+  .swiper-3d .swiper-slide-shadow-left,
+  .swiper-3d .swiper-slide-shadow-right {
+    background-image: none;
+  }
+
+  
+.swiper-slide h2 {
+    color: #fff;
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 1.4;
+    margin-bottom: 0.625rem;
+    padding: 0 0 0 1.563rem;
+    text-transform: uppercase;
+  }
+  
+  .swiper-slide p {
+    color: #dadada;
+    font-family: "Roboto", sans-serif;
+    font-weight: 300;
+    padding: 0 1.563rem;
+    line-height: 1.6;
+    font-size: 0.75rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .swiper-slide a {
+    margin: 1.25rem 1.563rem 3.438rem 1.563rem;
+    padding: 0.438em 1.875rem;
+    font-size: 0.9rem;
+  }
+  
+  .swiper-slide a:hover {
+    color: #005baa;
+  }
+  
+  .swiper-slide div {
+    display: none;
+    opacity: 0;
+    padding-bottom: 0.625rem;
+  }
+  
+  .swiper-slide-active div {
+    display: block;
+    opacity: 1;
+  }
+  h1 {
+    text-transform: capitalize;
+    letter-spacing: 0.8px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 900;
+    font-size: clamp(3.4375rem, 3.25rem + 0.75vw, 4rem);
+    background-color: #005baa;
+    background-image: linear-gradient(45deg, #005baa, #000000);
+    background-size: 100%;
+    background-repeat: repeat;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-background-clip: text;
+    -moz-text-fill-color: transparent;
+  }
+}

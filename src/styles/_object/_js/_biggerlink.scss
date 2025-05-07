@@ -1,0 +1,8 @@
+@use "../../_foundation" as f;
+
+*[class*="js-biggerlink"] {
+  transition: f.$transition;
+  &:hover {
+    cursor: pointer;
+  }
+}

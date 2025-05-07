@@ -1,15 +1,17 @@
-import { chromium, firefox, webkit, devices } from 'playwright';
+import { chromium, firefox, webkit, devices, Browser } from 'playwright';
 import pixelmatch from 'pixelmatch';
 import { PNG } from 'pngjs';
 import { NextResponse } from 'next/server';
 
+
 // ブラウザのシングルトンインスタンスを管理するためのクラス
 class BrowserManager {
+  private browser: Browser | null; // 型定義を追加
   constructor() {
     this.browser = null;
   }
 
-  async getBrowser(browserName) {
+  async getBrowser(browserName: string): Promise<Browser> {
     if (this.browser) {
       return this.browser; // ブラウザが既に起動している場合は再利用
     }
@@ -30,7 +32,7 @@ class BrowserManager {
     return this.browser;
   }
 
-  async closeBrowser() {
+  async closeBrowser(): Promise<void> {
     if (this.browser) {
       await this.browser.close();
       this.browser = null;
@@ -38,21 +40,24 @@ class BrowserManager {
   }
 
   // 定期的なブラウザの再起動
-  async restartBrowser(browserName) {
+  async restartBrowser(browserName: string): Promise<Browser> {
     await this.closeBrowser();
-    this.browser = await this.getBrowser(browserName);
+    return this.getBrowser(browserName);
   }
 }
 
 const browserManager = new BrowserManager();
 
-export async function GET(request) {
+export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const productionUrl = searchParams.get('productionUrl');
     const developmentUrl = searchParams.get('developmentUrl');
     const deviceName = searchParams.get('device') || 'Desktop'; // デフォルトはデスクトップ
     const browserName = searchParams.get('browser') || 'chromium'; // デフォルトは Chromium
+    const developmentUsername = searchParams.get('developmentUsername') || '';
+    const developmentPassword = searchParams.get('developmentPassword') || '';
+    console.log('API: ', developmentUsername, developmentPassword); // ログ追加
 
     if (!productionUrl || !developmentUrl) {
       return NextResponse.json({ error: 'Missing productionUrl or developmentUrl' }, { status: 400 });
@@ -61,58 +66,176 @@ export async function GET(request) {
     // ブラウザの取得
     const browser = await browserManager.getBrowser(browserName);
 
-    let contextOptions = {};
-    if (deviceName !== 'Desktop') {
-      const device = devices[deviceName];
-      if (!device) {
-        return NextResponse.json({ error: `Invalid device name: ${deviceName}` }, { status: 400 });
-      }
+    // デバイス設定
+    let contextOptions: Record<string, string | number | boolean | object | null> = {};
+    let viewport = null;  // ビューポートをnullで初期化
+    if (deviceName === 'Desktop') {
+      viewport = { width: 1920, height: 1080 }; // デスクトップのビューポートを設定
+      contextOptions = {
+        viewport: viewport,
+        httpCredentials: {
+          username: developmentUsername,
+          password: developmentPassword,
+        },
+        bypassCSP: true,
+        ignoreHTTPSErrors: true,
+      };
+    } else if (deviceName === 'iPhone') {
+      const device = devices['iPhone 11'];
+      viewport = device.viewport;
       contextOptions = {
         ...device,
-        viewport: device.viewport, // 明示的に viewport を設定
+        httpCredentials: {
+          username: developmentUsername,
+          password: developmentPassword,
+        },
+        bypassCSP: true,
+        ignoreHTTPSErrors: true,
       };
+            // Firefox の場合は isMobile を削除
+            if (browserName === 'firefox') {
+              delete contextOptions.isMobile;
+            }
+    } else if (deviceName === 'Android') {
+      const device = devices['Pixel 5'];
+      viewport = device.viewport;
+      contextOptions = {
+        ...device,
+        httpCredentials: {
+          username: developmentUsername,
+          password: developmentPassword,
+        },
+        bypassCSP: true,
+        ignoreHTTPSErrors: true,
+      };
+            // Firefox の場合は isMobile を削除
+            if (browserName === 'firefox') {
+              delete contextOptions.isMobile;
+            }
+    } else {
+      return NextResponse.json({ error: `Invalid device name: ${deviceName}` }, { status: 400 });
     }
+
 
     const context = await browser.newContext(contextOptions);
     const page = await context.newPage();
 
     try {
-      // ページの読み込み完了後にスクリーンショットを取得 (フルスクリーン)
-      await page.goto(productionUrl, { waitUntil: 'load', timeout: 30000 }); // タイムアウトを設定
-      const productionScreenshot = await page.screenshot({ fullPage: true });
-      await page.goto(developmentUrl, { waitUntil: 'load', timeout: 30000 }); // タイムアウトを設定
-      const developmentScreenshot = await page.screenshot({ fullPage: true });
+      // Production URL のページを読み込み
+      console.log('production URLを読み込み中です');
+      await page.goto(productionUrl, { waitUntil: 'load', timeout: 40000 });
+      // ページをスクロールしてすべての要素を表示
+      await page.evaluate(async () => {
+        await new Promise<void>((resolve) => {
+            let totalHeight = 0;
+            const distance = 100;
+            const scroll = () => {
+                const scrollHeight = document.body.scrollHeight;
+                window.scrollBy(0, distance);
+                totalHeight += distance;
+    
+                if (totalHeight >= scrollHeight) {
+                    resolve();
+                    return;
+                }
+    
+                requestAnimationFrame(scroll);
+            };
+            scroll();
+        });
+    });
+      console.log('Production URLの読み込みが完了しました');
 
-      // 画像比較処理
+      // スクロール後に2秒待機
+      await page.waitForTimeout(2000);
+      // スクロール後にスクリーンショットを取得
+      const productionScreenshot = await page.screenshot({ fullPage: true });
+      console.log('Production URLのスクショが完了しました');
+
+      // Development URL のページを読み込み
+      console.log('development URLを読み込み中です');;
+      await page.goto(developmentUrl, {
+        waitUntil: 'load',
+        timeout: 40000,
+      });
+            // ページをスクロールしてすべての要素を表示
+            await page.evaluate(async () => {
+              await new Promise<void>((resolve) => {
+                  let totalHeight = 0;
+                  const distance = 100;
+                  const scroll = () => {
+                      const scrollHeight = document.body.scrollHeight;
+                      window.scrollBy(0, distance);
+                      totalHeight += distance;
+          
+                      if (totalHeight >= scrollHeight) {
+                          resolve();
+                          return;
+                      }
+          
+                      requestAnimationFrame(scroll);
+                  };
+                  scroll();
+              });
+          });
+      console.log('Development URLの読み込みが完了しました');
+
+      // スクロール後に2秒待機
+      await page.waitForTimeout(4000);
+      const developmentScreenshot = await page.screenshot({ fullPage: true });
+      console.log('Development URLのスクショが完了しました');
+
+      // 差分比較処理
       const img1 = PNG.sync.read(productionScreenshot);
       const img2 = PNG.sync.read(developmentScreenshot);
-      const { width, height } = img1;
+      const width = Math.min(img1.width, img2.width);
+      const height = Math.min(img1.height, img2.height);
+
+      const resizedImg1 = new PNG({ width, height });
+      const resizedImg2 = new PNG({ width, height });
+
+      PNG.bitblt(img1, resizedImg1, 0, 0, width, height, 0, 0);
+      PNG.bitblt(img2, resizedImg2, 0, 0, width, height, 0, 0);
       const diff = new PNG({ width, height });
 
+      // **差分チェックオプション**:
+      // ここに差分チェックのオプション (閾値、色など) を追加できます。
       const numDiffPixels = pixelmatch(
-        img1.data,
-        img2.data,
+        resizedImg1.data,
+        resizedImg2.data,
         diff.data,
         width,
         height,
-        { threshold: 0.1 } // 差分の閾値 (調整可能)
+        { threshold: 0.7, }
+         // 差分の閾値 (調整可能)
       );
 
+      const productionImageBase64 = `data:image/png;base64,${productionScreenshot.toString('base64')}`;
+      const developmentImageBase64 = `data:image/png;base64,${developmentScreenshot.toString('base64')}`;
       // 差分画像をBase64エンコード
       const diffImageBuffer = PNG.sync.write(diff);
       const diffImageBase64 = `data:image/png;base64,${diffImageBuffer.toString('base64')}`;
 
-      return NextResponse.json({ diffImageSrc: diffImageBase64, numDiffPixels });
+      return NextResponse.json({
+        diffImageSrc: diffImageBase64,
+        numDiffPixels,
+        productionImageSrc: productionImageBase64,
+        developmentImageSrc: developmentImageBase64,
+      });
     } catch (e) {
-      console.error(e);
-      return NextResponse.json({ error: `Screenshot or comparison error: ${e.message}` }, { status: 500 }); // より詳細なエラーメッセージ
+      if (e instanceof Error) {
+        console.error(e.message); // エラーメッセージを安全に取得
+      } else {
+        console.error('An unknown error occurred:', e); // 型が不明な場合の処理
+      }
+      return NextResponse.json({ error: `Screenshot or comparison error: ${e instanceof Error ? e.message : 'Unknown error'}` }, { status: 500 });
     } finally {
       await page.close();
       await context.close();
     }
   } catch (e) {
-    console.error(e);
-    return NextResponse.json({ error: `General error: ${e.message}` }, { status: 500 }); // より詳細なエラーメッセージ
+    console.error('Unknown error:', e); // 型が不明な場合の処理
+    return NextResponse.json({ error: 'An unknown error occurred.' }, { status: 500 });
   }
 }
 

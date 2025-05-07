@@ -1,0 +1,48 @@
+@use "../../_foundation" as f;
+
+
+.tp{
+    &-about{
+        &__box{
+        }
+        &__list{
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            &+&{
+                margin-top: 1rem;
+            }
+            dt{
+                border-radius: 1.5rem;
+                padding: 15px 30px;
+                color: #fff;
+                background: f.$bg-main;
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: center;
+            }
+            dd{
+                margin-left: 2.5rem;
+                border-radius: 1.5rem;
+                padding-left: 5rem;
+                padding-right: 5rem;
+                border: .1rem solid #eee;
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -ms-flex-wrap: wrap;
+                flex-wrap: wrap;
+                -webkit-box-align: center;
+                -ms-flex-align: center;
+                align-items: center;
+                -webkit-box-pack: start;
+                -ms-flex-pack: start;
+                justify-content: flex-start;
+            }
+        }
+    }
+    &-template{
+    }
+}

@@ -1,0 +1,81 @@
+// ============================================================
+//  メディアクエリ
+// ============================================================
+
+$breakpoint-sm: 680px;
+$breakpoints: (
+  'xs': 374px,
+  'sm' : 680px,
+  'md': 980px,
+  'lg': 1025px,
+  'xl' : 1064px, //- w-defmax と同じ数値
+  'xxl': 1340px
+) !default;
+
+//- 指定方法
+//- min-width(**以上) ------------
+//- @include mq(min, md) {内容}
+//- max-width(**未満) ------------
+//- @include mq(max, md) {内容}
+//- width(**未満、**以上) ------------
+//- @include mq(bw, sm, md) {内容}
+@mixin mq($type, $bp1, $bp2:0) {
+  @if ($type == min) {
+    @media screen and (min-width: #{map-get($breakpoints, $bp1)}) {
+      @content;
+    }
+  } @else if ($type == max) {
+    $width: map-get($breakpoints, $bp1);
+    $width: $width - .2px;
+    @media screen and (max-width: #{$width}) {
+      @content;
+    }
+  } @else if ($type == bw) { // bw → between
+    $width: map-get($breakpoints, $bp2);
+    $width: $width - .2px;
+    @media screen and (min-width: #{map-get($breakpoints, $bp1)}) and (max-width: #{$width}) {
+      @content;
+    }
+  }
+}
+
+//- 直接指定
+// ※ min-width 680 以上(TB・PC兼用よく使う簡易指定)
+//- @include scPC {内容}
+@mixin scPC() {
+  @media print, screen and (min-width: $breakpoint-sm) {
+    @content;
+  }
+}
+
+// ※ max-width 680 未満(SP用よく使う簡易指定)
+//- @include scSP {内容}
+@mixin scSP() {
+  @media print, screen and (max-width: $breakpoint-sm - .2px) {
+    @content;
+  }
+}
+
+// max-screen
+//- @include max-screen(***px) {内容}
+@mixin max-screen($break-point) {
+  @media print, screen and (max-width: $break-point - .2px) {
+    @content;
+  }
+}
+
+// min-screen
+//- @include min-screen(***px) {内容}
+@mixin min-screen($break-point) {
+  @media print, screen and (min-width: $break-point) {
+    @content;
+  }
+}
+
+// min - max setting(***以上、***未満)
+//- @include screen(***px,***px) {内容}
+@mixin screen($break-point-min, $break-point-max) {
+  @media print, screen and (min-width: $break-point-min) and (max-width: $break-point-max - .2px) {
+    @content;
+  }
+}

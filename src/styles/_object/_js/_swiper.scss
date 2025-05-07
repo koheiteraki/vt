@@ -1,0 +1,12 @@
+/* スライダーのwrapper */
+.js-swiper-infinite{
+    .swiper-wrapper{
+        transition-timing-function: linear;
+    }
+    .swiper-slide{
+        height: auto;
+    }
+    img {
+      }
+    
+}

@@ -1,0 +1,48 @@
+@use "../../_foundation" as f;
+
+.c-pagetop {
+  position: fixed;
+  bottom: 120px;
+  right: 40px;
+  width: 50px;
+  height: 50px;
+  transition: f.$transition;
+  box-shadow: 0 0 2px rgba($color: #fff, $alpha: 0.7);
+  z-index: 5;
+  @include f.mq(max, md) {
+    right: 2.5vw;
+    bottom: 90px;
+  }
+
+  &:hover {
+    cursor: pointer;
+
+    a {
+      background-color: f.$color-white;
+
+      &::after {
+        color: f.$color-black;
+      }
+    }
+  }
+
+  &__link {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: block;
+    background-color: f.$color-black;
+    border: 1px solid f.$color-black;
+
+    &::after {
+      @include f.icoset(f.$font-arr);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-90deg);
+      font-size: 3rem;
+      font-weight:  f.$W7;
+      color: f.$color-white;
+      transition: f.$transition;
+    }
+  }
+}
