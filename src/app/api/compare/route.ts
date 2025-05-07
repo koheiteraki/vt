@@ -9,7 +9,6 @@ class BrowserManager {
   constructor() {
     this.browser = null;
   }
-
   async getBrowser(browserName: string): Promise<Browser> {
     if (this.browser) {
       return this.browser; // ブラウザが既に起動している場合は再利用
