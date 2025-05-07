@@ -57,18 +57,24 @@ export default function Compare() {
       setLoading(true);
       try {
         const response = await fetch(
-       `/api/compare?productionUrl=${productionUrlFromParams}&developmentUrl=${developmentUrlFromParams}&device=${selectedDevice}&browser=${selectedBrowser}&developmentUsername=${developmentUsername}&developmentPassword=${developmentPassword}`
+          `/api/compare?productionUrl=${productionUrlFromParams}&developmentUrl=${developmentUrlFromParams}&device=${selectedDevice}&browser=${selectedBrowser}&developmentUsername=${developmentUsername}&developmentPassword=${developmentPassword}`
         );
-        const data = await response.json();
-        console.log('API Response:', data); // レスポンスデータをコンソールに出力
-
-        if (response.ok) {
+    
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+    
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          const data = await response.json();
+          console.log('API Response:', data); // レスポンスデータをコンソールに出力
+    
           setDiffImageSrc(data.diffImageSrc);
           setproductionImageSrc(data.productionImageSrc);
           setdevelopmentImageSrc(data.developmentImageSrc);
           setNumDiffPixels(data.numDiffPixels);
         } else {
-          setError(data.error || 'An error occurred');
+          throw new Error('Invalid JSON response');
         }
       } catch (error) {
         console.error(error);
