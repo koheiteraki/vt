@@ -122,47 +122,47 @@ export default function Compare() {
           <>
             <h2 className="text-lg font-bold mt-6">画像の差分結果</h2>
             <p className="text-md mt-2">差分ピクセル数: {numDiffPixels}</p>
-            <div className="flex mt-4">
+            <div className="flex mt-4 gap-3">
               <div className="w-1/3">
                 <h3 className="text-md font-semibold">Production</h3>
-                <h4>
-                    <Link href={productionUrl} target='blank' className='underline decoration-slate-50'>{productionUrl}</Link>
-                </h4>
                 {productionImageSrc ? (
                   <Image
                     src={productionImageSrc}
                     alt="Production Screenshot"
-                    width={400}
+                    width={600}
                     height={300}
                     className="mt-4 border rounded-md"
                   />
                 ) : (
                   <p>Production image not available</p>
                 )}
+                                <h4>
+                URL:<Link href={productionUrl} target='blank' className='underline decoration-slate-50'>{productionUrl}</Link>
+                </h4>
               </div>
               <div className="w-1/3">
                 <h3 className="text-md font-semibold">Development</h3>
-                <h4>
-                    <Link href={developmentUrl} target='blank' className='underline decoration-slate-50'>{developmentUrl}</Link>
-                </h4>
                 {developmentImageSrc ? (
                   <Image
                     src={developmentImageSrc}
                     alt="development Screenshot"
-                    width={400}
+                    width={600}
                     height={300}
                     className="mt-4 border rounded-md"
                   />
                 ) : (
                   <p>Production image not available</p>
                 )}
+                  <h4>
+                    URL:<Link href={developmentUrl} target='blank' className='underline decoration-slate-50'>{developmentUrl}</Link>
+                </h4>
               </div>
               <div className="w-1/3">
                 <h3 className="text-md font-semibold">差分画像</h3>
                 <Image
                   src={diffImageSrc}
                   alt="Diff Image"
-                  width={400}
+                  width={600}
                   height={300}
                   className="mt-4 border rounded-md"
                 />
