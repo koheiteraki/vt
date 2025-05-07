@@ -18,6 +18,18 @@ export default function Compare() {
   const [developmentUrl, setDevelopmentUrl] = useState('');
   const [selectedDevice, setSelectedDevice] = useState('Desktop');
   const [selectedBrowser, setSelectedBrowser] = useState('chromium');
+  const [isModalOpen, setIsModalOpen] = useState(false); // モーダルの開閉状態
+  const [modalImageSrc, setModalImageSrc] = useState<string | null>(null); // モーダルに表示する画像
+
+  const openModal = (imageSrc: string) => {
+    setModalImageSrc(imageSrc);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalImageSrc(null);
+    setIsModalOpen(false);
+  };
 
   useEffect(() => {
     const { searchParams } = new URL(window.location.href);
@@ -131,7 +143,8 @@ export default function Compare() {
                     alt="Production Screenshot"
                     width={600}
                     height={300}
-                    className="mt-4 border rounded-md"
+                    className="mt-4 border rounded-md cursor-pointer"
+                    onClick={() => openModal(productionImageSrc)} // クリックでモーダルを開く
                   />
                 ) : (
                   <p>Production image not available</p>
@@ -148,7 +161,8 @@ export default function Compare() {
                     alt="development Screenshot"
                     width={600}
                     height={300}
-                    className="mt-4 border rounded-md"
+                    className="mt-4 border rounded-md cursor-pointer"
+                    onClick={() => openModal(developmentImageSrc)} // クリックでモーダルを開く
                   />
                 ) : (
                   <p>Production image not available</p>
@@ -164,7 +178,8 @@ export default function Compare() {
                   alt="Diff Image"
                   width={600}
                   height={300}
-                  className="mt-4 border rounded-md"
+                  className="mt-4 border rounded-md cursor-pointer"
+                  onClick={() => openModal(diffImageSrc)} // クリックでモーダルを開く
                 />
               </div>
             </div>
@@ -173,6 +188,32 @@ export default function Compare() {
           <p>No differences found or comparison pending.</p>
         )}
       </div>
+            {/* モーダル */}
+            {isModalOpen && (
+              <div
+                className="fixed inset-0 z-[999] grid h-screen w-screen place-items-center bg-black bg-opacity-60 backdrop-blur-sm"
+                onClick={closeModal} // 背景クリックでモーダルを閉じる
+              >
+                <div
+                  className="relative m-4 p-10 w-3/5 max-h-[90vh] overflow-y-auto rounded-lg bg-white shadow-sm"
+                  onClick={(e) => e.stopPropagation()} // モーダル内クリックで閉じないようにする
+                >
+                  <Image
+                    src={modalImageSrc!}
+                    alt="Expanded Image"
+                    width={800}
+                    height={600}
+                    className="rounded-md w-full"
+                  />
+                  <button
+                    onClick={closeModal}
+                    className="absolute top-2 right-2 text-white bg-red-600 rounded-full px-3 py-1"
+                  >
+                    ×
+                  </button>
+                </div>
+              </div>
+            )}
     </div>
   );
 }
