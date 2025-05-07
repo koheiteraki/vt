@@ -1,0 +1,15 @@
+
+{
+    "functions": {
+      "api/*.js": {
+        "runtime": "nodejs16.x",
+        "maxDuration": 10,
+        "memory": 1024
+      }
+    },
+    "build": {
+      "env": {
+        "PLAYWRIGHT_BROWSERS_PATH": "0"
+      }
+    }
+  }
