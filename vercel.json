@@ -3,5 +3,8 @@
       "env": {
         "PLAYWRIGHT_BROWSERS_PATH": "0"
       }
+    },
+    "env": {
+      "PLAYWRIGHT_BROWSERS_PATH": "0"
     }
   }

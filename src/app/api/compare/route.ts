@@ -1,11 +1,7 @@
-'use client';
-
 import { chromium, firefox, webkit, devices, Browser } from 'playwright';
 import pixelmatch from 'pixelmatch';
 import { PNG } from 'pngjs';
 import { NextResponse } from 'next/server';
-
-
 
 // ブラウザのシングルトンインスタンスを管理するためのクラス
 class BrowserManager {
@@ -73,7 +69,7 @@ export async function GET(request: Request) {
     let contextOptions: Record<string, string | number | boolean | object | null> = {};
     let viewport = null;  // ビューポートをnullで初期化
     if (deviceName === 'Desktop') {
-      viewport = { width: 1920, height: 1080 }; // デスクトップのビューポートを設定
+      viewport = { width: 1280, height: 720 }; // デスクトップのビューポートを設定
       contextOptions = {
         viewport: viewport,
         httpCredentials: {
@@ -126,12 +122,12 @@ export async function GET(request: Request) {
     try {
       // Production URL のページを読み込み
       console.log('production URLを読み込み中です');
-      await page.goto(productionUrl, { waitUntil: 'load', timeout: 40000 });
+      await page.goto(productionUrl, { waitUntil: 'load', timeout: 10000 });
       // ページをスクロールしてすべての要素を表示
       await page.evaluate(async () => {
         await new Promise<void>((resolve) => {
             let totalHeight = 0;
-            const distance = 100;
+            const distance = 500;
             const scroll = () => {
                 const scrollHeight = document.body.scrollHeight;
                 window.scrollBy(0, distance);
@@ -149,17 +145,17 @@ export async function GET(request: Request) {
     });
       console.log('Production URLの読み込みが完了しました');
 
-      // スクロール後に2秒待機
-      await page.waitForTimeout(2000);
+      // スクロール後に1秒待機
+      await page.waitForTimeout(1000);
       // スクロール後にスクリーンショットを取得
-      const productionScreenshot = await page.screenshot({ fullPage: true });
+      const productionScreenshot = await page.screenshot({ fullPage: true});
       console.log('Production URLのスクショが完了しました');
 
       // Development URL のページを読み込み
       console.log('development URLを読み込み中です');;
       await page.goto(developmentUrl, {
         waitUntil: 'load',
-        timeout: 40000,
+        timeout: 10000,
       });
             // ページをスクロールしてすべての要素を表示
             await page.evaluate(async () => {
@@ -183,9 +179,9 @@ export async function GET(request: Request) {
           });
       console.log('Development URLの読み込みが完了しました');
 
-      // スクロール後に2秒待機
-      await page.waitForTimeout(4000);
-      const developmentScreenshot = await page.screenshot({ fullPage: true });
+      // スクロール後に1秒待機
+      await page.waitForTimeout(1000);
+      const developmentScreenshot = await page.screenshot({ fullPage: true});
       console.log('Development URLのスクショが完了しました');
 
       // 差分比較処理
