@@ -132,12 +132,10 @@ export async function GET(request: Request) {
                 const scrollHeight = document.body.scrollHeight;
                 window.scrollBy(0, distance);
                 totalHeight += distance;
-    
                 if (totalHeight >= scrollHeight) {
                     resolve();
                     return;
                 }
-    
                 requestAnimationFrame(scroll);
             };
             scroll();
@@ -166,12 +164,10 @@ export async function GET(request: Request) {
                       const scrollHeight = document.body.scrollHeight;
                       window.scrollBy(0, distance);
                       totalHeight += distance;
-          
                       if (totalHeight >= scrollHeight) {
                           resolve();
                           return;
                       }
-          
                       requestAnimationFrame(scroll);
                   };
                   scroll();
