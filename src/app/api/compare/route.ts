@@ -152,7 +152,7 @@ export async function GET(request: Request) {
       console.log('development URLを読み込み中です');;
       await page.goto(developmentUrl, {
         waitUntil: 'load',
-        timeout: 10000,
+        timeout: 20000,
       });
             // ページをスクロールしてすべての要素を表示
             await page.evaluate(async () => {
@@ -200,7 +200,7 @@ export async function GET(request: Request) {
         diff.data,
         width,
         height,
-        { threshold: 0.7, }
+        { threshold: 0.1, }
          // 差分の閾値 (調整可能)
       );
 

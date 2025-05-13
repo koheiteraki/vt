@@ -4,6 +4,7 @@ import PageTitle from '@/app/components/PageTitle/PageTitle';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import Loading from "@/app/loading";
 import { useRouter } from 'next/navigation';
 
 export default function Compare() {
@@ -85,12 +86,11 @@ export default function Compare() {
     fetchData();
   }, [router, selectedDevice, selectedBrowser]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loading/>;
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div>
-      
+    <div className="min-h-screen">
       <PageTitle title="Visual Regression Test" description="差分テスト結果" />
       <div className="container mx-auto">
       <div className="mt-8">

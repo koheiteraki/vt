@@ -1,0 +1,34 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+  }
+
+  .progressBar {
+    width: 80%;
+    height: 20px;
+    background-color: #ddd;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+
+  .progress {
+    height: 100%;
+    background-color: #4CAF50;
+    border-radius: 10px;
+    width: 0; /* JavaScriptで動的に変更 */
+    transition: width 0.3s ease;
+  }
+
+  .tapButton {
+    padding: 15px 30px;
+    font-size: 1.2em;
+    background-color: #008CBA;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
